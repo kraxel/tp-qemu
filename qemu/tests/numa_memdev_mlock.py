@@ -21,7 +21,7 @@ def run(test, params, env):
     :param env: Dictionary with test environment.
     """
     error_context.context("Check host's numa node(s)!", test.log.info)
-    valid_nodes = numa_memdev_options.get_host_numa_node()
+    valid_nodes = numa_memdev_options.get_host_numa_node(test.log)
     if len(valid_nodes) < 2:
         test.cancel(
             "The host numa nodes that whose size is not zero should be "
