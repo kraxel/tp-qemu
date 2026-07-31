@@ -6,13 +6,15 @@ from virttest.staging import utils_memory
 from virttest.utils_numeric import normalize_data_size
 
 
-def get_host_numa_node():
+def get_host_numa_node(log):
     """
     Get host NUMA node whose node size is not zero
     """
     host_numa = utils_memory.numa_nodes()
+    log.info("host_numa = %s", host_numa)
     node_list = []
     numa_info = process.getoutput("numactl -H")
+    log.info("numa_info = %s", numa_info)
     for i in host_numa:
         node_size = re.findall(r"node %d size: \d+ \w" % i, numa_info)[0].split()[-2]
         if node_size != "0":
@@ -129,7 +131,7 @@ def run(test, params, env):
     :param env: Dictionary with test environment
     """
     error_context.context("Check host's numa node(s)!", test.log.info)
-    valid_nodes = get_host_numa_node()
+    valid_nodes = get_host_numa_node(test.log)
     if len(valid_nodes) < 2:
         test.cancel(
             "The host numa nodes that whose size is not zero should be "
